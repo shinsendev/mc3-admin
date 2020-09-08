@@ -1892,6 +1892,11 @@ supports-color@^7.0.0:
   dependencies:
     has-flag "^4.0.0"
 
+svelte-mui@^0.3.3-4:
+  version "0.3.3-4"
+  resolved "https://registry.yarnpkg.com/svelte-mui/-/svelte-mui-0.3.3-4.tgz#ca136de4e0578a614a328849cd3da1f18cc435e4"
+  integrity sha512-FytBWkvTQFLCqqkoFHkldGWcKj/vg8Qqinv/NH98VzGyAWY5xrK6alZw1HXmWXWGRKTl2AR6zeOf7ZO0aYoI4g==
+
 svelte@^3.17.3:
   version "3.24.1"
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.24.1.tgz#aca364937dd1df27fe131e2a4c234acb6061db4b"
