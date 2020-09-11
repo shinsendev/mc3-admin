@@ -1,7 +1,7 @@
 <script>
     import Section from "../components/Section.svelte";
     import { Button } from 'svelte-mui/src';
-    import { token, migration } from "../store.js";
+    import {token, migration, postError} from "../store.js";
     import { onMount } from 'svelte';
 
     let result = null
@@ -15,7 +15,9 @@
             headers:{
                 'content-type': 'application/json',
                 'Authorization': 'Bearer '+ $token,
-            },
+            }.catch((err) => {
+                postError.set(err)
+            }),
             body: JSON.stringify({})
         });
 
@@ -63,6 +65,13 @@
 
 </script>
 
+<style>
+    .error {
+        color: red;
+        text-align: center;
+    }
+</style>
+
 <Section title="Last Migration">
 
     {#if $migration !== null}
@@ -102,6 +111,12 @@
     </div>
 
     <Button class="submit" on:click={() =>  {post('api/indexations')}} outlined color='#db5462'>Start Indexation</Button>
+
+    {#if $postError !== null}
+        <div class="error">
+            <p>{$postError}</p>
+        </div>
+    {/if}
 
 </Section>
 
