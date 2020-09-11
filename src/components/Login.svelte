@@ -1,6 +1,7 @@
 <script>
     import {Textfield, Button} from 'svelte-mui/src';
-    import {connected, token} from "../store.js";
+    import {connected, token, error} from "../store.js";
+    import { onMount } from 'svelte';
 
     let login = '';
     let password = '';
@@ -9,7 +10,6 @@
     let result = null;
 
     async function postLogin() {
-
         const response = await fetch(mc3Url+'authentication_token', {
             method: 'POST',
             headers: {
@@ -29,14 +29,43 @@
             connected.set(true);
         }
 
+        else if (json.code === 401) {
+            error.set('Not the correct login or/and password.');
+        }
+
+        else if (json.code === 500) {
+            error.set('Error with MC3 server.')
+        }
+
+        else {
+            error.set('An unexpected error has occured.');
+        }
+
         result = JSON.stringify(json)
     }
 
 </script>
 
-<div class="login-wrapper">
+<style>
+    .textfields-wrapper {
+        max-width: 500px;
+        margin: auto;
+        padding-bottom: 1rem;
+    }
 
-    <p>Welcome to the admin page</p>
+    .submit-wrapper {
+        display: flex;
+        justify-content: center;
+    }
+
+    .error {
+        color: red;
+        text-align: center;
+    }
+
+</style>
+
+<div class="login-wrapper">
 
     <div class="textfields-wrapper">
         <Textfield
@@ -63,7 +92,11 @@
         <Button class="submit" on:click={postLogin} outlined color='#db5462'>Submit</Button>
     </div>
 
-<!--    <Indexation/>-->
-<!--    <Import/>-->
+
+    {#if $error !== null}
+    <div class="error">
+        <p>{$error}</p>
+    </div>
+    {/if}
 
 </div>

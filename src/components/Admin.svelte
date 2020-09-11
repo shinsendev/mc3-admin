@@ -1,10 +1,13 @@
 <script>
     import Section from "../components/Section.svelte";
     import { Button } from 'svelte-mui/src';
-    import { token } from "../store.js";
+    import { token, migration } from "../store.js";
+    import { onMount } from 'svelte';
 
     let result = null
     let mc3Url = 'http://127.0.0.1:8000/';
+    let lastImport = null;
+    let lastIndexation = null;
 
     async function post(urlSuffix) {
         const response = await fetch(mc3Url + urlSuffix, {
@@ -16,20 +19,63 @@
             body: JSON.stringify({})
         });
 
-        const json = await response.json()
-        result = JSON.stringify(json)
+        const json = await response.json();
+        result = JSON.stringify(json);
     }
+
+    async function get(urlSuffix) {
+        const response = await fetch(mc3Url + urlSuffix, {
+            method: 'GET',
+            headers:{
+                'content-type': 'application/json',
+                'Authorization': 'Bearer '+ $token,
+            },
+        });
+
+        return await response.json();
+    }
+
+    function getLastMigration(imports, indexations) {
+        if (imports.length === 0 && indexations.length === 0) {
+            return null;
+        }
+
+        lastImport = imports[0];
+        lastIndexation = indexations[0];
+
+        if (lastImport.createdAt > lastIndexation.createdAt) {
+            lastImport.type = 'migration';
+            return lastImport;
+        }
+        else {
+            lastIndexation.type = 'indexation';
+            return lastIndexation;
+        }
+    }
+
+    onMount(async () => {
+        console.log($migration);
+
+        const imports = await get('api/imports.json');
+        const indexations = await get('api/indexations.json');
+        migration.set(getLastMigration(imports, indexations));
+    });
 
 </script>
 
 <Section title="Last Migration">
-    <ul>
-        <li>Status : <strong>in progress</strong></li>
-        <li>Type: indexation</li>
-        <li>Has Started at : </li>
-    </ul>
 
-    <p>If migration is not finished, you have to wait (x time) before being able to launch a new one.</p>
+    {#if $migration !== null}
+    <ul>
+        <li>Status : <strong>{$migration.status}</strong></li>
+        <li>Type: {$migration.type}</li>
+        <li>Started at : {$migration.createdAt}</li>
+    </ul>
+    {:else}
+        <p>No data</p>
+    {/if}
+
+    <p>If migration is not finished, you have to wait 45 minutes before being able to launch a new one.</p>
     <p>If migrations always failed, contact mc2(at)shinsen(dot)fr.</p>
 
 </Section>
