@@ -1,14 +1,16 @@
 <script>
     import {Textfield, Button} from 'svelte-mui/src';
+    import {connected, token} from "../store.js";
 
     let login = '';
     let password = '';
     let mc3Url = 'http://127.0.0.1:8000/';
+    // let mc3Url = 'http://api.mc2.website/';
     let result = null;
 
     async function postLogin() {
 
-        const response = await fetch(mc3Url+'login', {
+        const response = await fetch(mc3Url+'authentication_token', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -20,7 +22,13 @@
             })
         });
 
-        const json = await response.json()
+        const json = await response.json();
+
+        if (json.token !== undefined) {
+            token.set(json.token);
+            connected.set(true);
+        }
+
         result = JSON.stringify(json)
     }
 

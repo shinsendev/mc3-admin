@@ -1,5 +1,8 @@
 <script>
 	import Login from "../components/Login.svelte";
+	import {connected} from "../store.js";
+	import Admin from "../components/Admin.svelte";
+
 </script>
 
 <style>
@@ -40,4 +43,8 @@
 	<title>Sapper project template</title>
 </svelte:head>
 
-<Login/>
+{#if $connected === false}
+	<Login/>
+{:else}
+	<Admin/>
+{/if}
