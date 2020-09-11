@@ -20,6 +20,8 @@
                 "email": login,
                 "password": password,
             })
+        }).catch((err) => {
+            error.set(err)
         });
 
         const json = await response.json();
@@ -30,7 +32,7 @@
         }
 
         else if (json.code === 401) {
-            error.set('Not the correct login or/and password.');
+            error.set('Uncorrect login or/and password.');
         }
 
         else if (json.code === 500) {
@@ -38,7 +40,7 @@
         }
 
         else {
-            error.set('An unexpected error has occured.');
+            error.set('An unexpected error has occured. Error message is :' + json.message);
         }
 
         result = JSON.stringify(json)
