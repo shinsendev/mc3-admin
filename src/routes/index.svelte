@@ -1,8 +1,17 @@
-<script>
-	import Login from "../components/Login.svelte";
-	import {connected} from "../store.js";
-	import Admin from "../components/Admin.svelte";
+<script context="module">
+	export async function preload(page, session) {
+		const { MC3_API_URL } = session;
+		return { mc3Url: MC3_API_URL };
+	}
+</script>
 
+<script>
+	export let mc3Url;
+	import {connected, mc3} from "../store.js";
+	mc3.set(mc3Url);
+
+	import Login from "../components/Login.svelte";
+	import Admin from "../components/Admin.svelte";
 </script>
 
 <style>

@@ -1,16 +1,17 @@
+
+
 <script>
     import {Textfield, Button} from 'svelte-mui/src';
-    import {connected, token, error} from "../store.js";
+    import {connected, token, error, mc3} from "../store.js";
     import { onMount } from 'svelte';
+
 
     let login = '';
     let password = '';
-    let mc3Url = 'http://127.0.0.1:8000/';
-    // let mc3Url = 'http://api.mc2.website/';
     let result = null;
 
     async function postLogin() {
-        const response = await fetch(mc3Url+'authentication_token', {
+        const response = await fetch($mc3+'authentication_token', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
