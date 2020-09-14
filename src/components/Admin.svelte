@@ -1,19 +1,19 @@
 <script>
     import Section from "../components/Section.svelte";
     import { Button } from 'svelte-mui/src';
-    import {token, migration, postError} from "../store.js";
+    import {token, migration, postError, mc3} from "../store.js";
     import { onMount } from 'svelte';
 
     let result = null
-    let mc3Url = 'http://127.0.0.1:8000/';
     let lastImport = null;
     let lastIndexation = null;
 
     async function post(urlSuffix) {
-        const response = await fetch(mc3Url + urlSuffix, {
+        const response = await fetch($mc3 + urlSuffix, {
             method: 'POST',
             headers:{
                 'content-type': 'application/json',
+                'Access-Control-Allow-Headers': '*',
                 'Authorization': 'Bearer '+ $token,
             }.catch((err) => {
                 postError.set(err)
@@ -26,10 +26,11 @@
     }
 
     async function get(urlSuffix) {
-        const response = await fetch(mc3Url + urlSuffix, {
+        const response = await fetch($mc3 + urlSuffix, {
             method: 'GET',
             headers:{
                 'content-type': 'application/json',
+                'Access-Control-Allow-Headers': '*',
                 'Authorization': 'Bearer '+ $token,
             },
         });

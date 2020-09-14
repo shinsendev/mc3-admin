@@ -15,6 +15,7 @@
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
+                'Access-Control-Allow-Headers': '*',
                 'content-type': 'application/json'
             },
             body: JSON.stringify({
