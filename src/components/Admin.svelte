@@ -58,7 +58,7 @@
         lastIndexation = indexations[0];
 
         if (lastImport.createdAt > lastIndexation.createdAt) {
-            lastImport.type = 'migration';
+            lastImport.type = 'import';
             return lastImport;
         }
         else {
