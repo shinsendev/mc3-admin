@@ -1,7 +1,7 @@
 <script>
     import Section from "../components/Section.svelte";
     import { Button } from 'svelte-mui/src';
-    import {token, migration, postError, mc3} from "../store.js";
+    import {token, migration, postError, mc3, error, connected, success} from "../store.js";
     import { onMount } from 'svelte';
 
     let result = null
@@ -15,14 +15,25 @@
                 'content-type': 'application/json',
                 'Access-Control-Allow-Headers': '*',
                 'Authorization': 'Bearer '+ $token,
-            }.catch((err) => {
-                postError.set(err)
-            }),
+            },
             body: JSON.stringify({})
+        }).catch((err) => {
+            postError.set(err);
         });
 
         const json = await response.json();
-        result = JSON.stringify(json);
+
+        if (json['@type'] === 'hydra:Error') {
+            success.set(null);
+            postError.set(json['@type'] + ': ' + json['hydra:description']);
+        }
+        else {
+            postError.set(null);
+            success.set('Migration has been successfully launched!');
+        }
+
+        result = JSON.stringify(json)
+
     }
 
     async function get(urlSuffix) {
@@ -57,8 +68,6 @@
     }
 
     onMount(async () => {
-        console.log($migration);
-
         const imports = await get('api/imports.json');
         const indexations = await get('api/indexations.json');
         migration.set(getLastMigration(imports, indexations));
@@ -69,6 +78,11 @@
 <style>
     .error {
         color: red;
+        text-align: center;
+    }
+
+    .success {
+        color: green;
         text-align: center;
     }
 </style>
@@ -113,12 +127,18 @@
 
     <Button class="submit" on:click={() =>  {post('api/indexations')}} outlined color='#db5462'>Start Indexation</Button>
 
+</Section>
+
+<section>
+    {#if $success !== null}
+        <div class="success">
+            <p>{$success}</p>
+        </div>
+    {/if}
     {#if $postError !== null}
         <div class="error">
             <p>{$postError}</p>
         </div>
     {/if}
-
-</Section>
-
+</section>
 

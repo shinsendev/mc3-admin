@@ -5,4 +5,5 @@ export const token = writable(null);
 export const migration = writable(null);
 export const error = writable(null);
 export const postError = writable(null);
+export const success = writable(null);
 export const mc3 = writable(null);
