@@ -1,6 +1,6 @@
 {
-  "name": "TODO",
-  "description": "TODO",
+  "name": "mc3-admin",
+  "description": "Admin front for MC3",
   "version": "0.0.1",
   "scripts": {
     "dev": "sapper dev",

@@ -49,7 +49,7 @@
 </style>
 
 <svelte:head>
-	<title>Sapper project template</title>
+	<title>MC2 Admin</title>
 </svelte:head>
 
 {#if $connected === false}

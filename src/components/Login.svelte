@@ -1,5 +1,3 @@
-
-
 <script>
     import {Textfield, Button} from 'svelte-mui/src';
     import {connected, token, error, mc3} from "../store.js";
@@ -23,7 +21,7 @@
                 "password": password,
             })
         }).catch((err) => {
-            error.set(err)
+            error.set(err);
         });
 
         const json = await response.json();
